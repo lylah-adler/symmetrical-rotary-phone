@@ -46,13 +46,15 @@ app.use(express.json({ limit: "10mb" }));
 // ---- auth middleware ---------------------------------------------------------
 
 function requireAuth(req, res, next) {
-  const header = req.get("authorization") || "";
-  const token = header.replace(/^Bearer\s+/i, "").trim();
-  if (token !== CONTROL_TOKEN) {
-    return res.status(401).json({ error: "unauthorized" });
-  }
-  next();
-}
+     const header = req.get("authorization") || "";
+     const headerToken = header.replace(/^Bearer\s+/i, "").trim();
+     const queryToken = (req.query.token || "").toString().trim();
+     const token = headerToken || queryToken;
+     if (token !== CONTROL_TOKEN) {
+       return res.status(401).json({ error: "unauthorized" });
+     }
+     next();
+   }
 
 // ---- helpers -----------------------------------------------------------------
 
